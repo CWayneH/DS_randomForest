@@ -46,7 +46,7 @@ Rscript randomForest.R --fold N --train ds_final/train_salary.csv --test ds_fina
 ### Predict
 ![Predict](3.png)
 
-## Interesting Analyze Can be Reference
+## Interesting Analysis and Visualization Can be Reference
 [Salary Data EDA](https://www.kaggle.com/jackogozaly/salary-data-eda)
 
 ## Reference
