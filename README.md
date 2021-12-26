@@ -1,6 +1,6 @@
 # RandomForest Predict Base_Salary
 
-## Analyize Data
+## Analyze Data
 
 | Attribute | Property | Can be NULL |
 |-----------|----------|-------------|
