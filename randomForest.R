@@ -180,7 +180,7 @@ train_data[sapply(train_data, is.character)] <- lapply(train_data
 
 
 # ========================= transfer to formula ==========================
-interest <- as.formula(y ~ x4 + x6 + x7)
+interest <- as.formula(y ~ x4 + x6 + x7 + x10 + x11)
 
 # =========================== add ID into data ===========================
 ID <- c(1:nrow(train_data))
