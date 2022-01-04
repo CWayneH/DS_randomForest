@@ -1,6 +1,11 @@
 library(randomForest)
 library(ggplot2)
+library(caret)
+library(ggpubr)
 library(Metrics)
+library(ggpubr)
+library(corrplot)
+
 
 
 # read parameters
@@ -29,12 +34,12 @@ while(i < length(args)){
 }
 
 # read train_input & test_input 
-train_data <- read.csv(file = train_input, header = T, stringsAsFactors = F)
-test_data <- read.csv(file = test_input, header = T, stringsAsFactors = F)
+# train_data <- read.csv(file = train_input, header = T, stringsAsFactors = F)
+# test_data <- read.csv(file = test_input, header = T, stringsAsFactors = F)
 
-# fold <- 5
-# train_data <- read.csv(file = "ds_final/train_salary.csv", header = T, stringsAsFactors = F)
-# test_data <- read.csv(file = "ds_final/test_salary.csv", header = T, stringsAsFactors = F)
+fold <- 5
+train_data <- read.csv(file = "ds_final/train_salary.csv", header = T, stringsAsFactors = F)
+test_data <- read.csv(file = "ds_final/test_salary.csv", header = T, stringsAsFactors = F)
 
 # ================== add IsTrain for merge two dataset ===================
 train_data$IsTrain <- TRUE
@@ -61,126 +66,103 @@ test_data <- merge[merge$IsTrain == F, ]
 
 # remove outliers
 
-# =============== boxplot(round(train_data$x4/50000, 0)) ================
-train_data$x4 <- round(train_data$x4 / 50000, 0)
-
-train_data <- subset(train_data, 
-                     train_data$x4 <= 16)
-
-# ================ boxplot(round(train_data$x6 / 4, 0)) =================
-train_data$x6 <- round(train_data$x6 / 4, 0)
-train_data <- subset(train_data, 
-                     train_data$x6 <= 6)
-
-boxplot(round(train_data$x7 / 4, 0))
-train_data$x7 <- round(train_data$x7 / 4, 0)
-train_data <- subset(train_data, 
-                     train_data$x7 <= 6)
-
-train_data$x10 <- round(train_data$x10 / 10000, 0)
-train_data$x10 <- round(train_data$x10, 0)
-train_data <- subset(train_data, 
-                     train_data$x10 <= 20)
-
-train_data$x11 <- round(train_data$x11 / 10000, 0)
-train_data$x11 <- round(train_data$x11, 0)
-train_data <- subset(train_data, 
-                     train_data$x11 <= 20)
-
 # ==================== convert char feature to factor ====================
 train_data[sapply(train_data, is.character)] <- lapply(train_data
                                                        [sapply(train_data, 
                                                                is.character)], 
                                                        as.factor)
-# # ================ analysis data through visualization =================
-# 
-# d3 <- ggplot(train_data, aes(x = x3, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d3
-# #-----------------------------------------------------------------------
-# 
-# d4 <- ggplot(train_data, aes(x = x4, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d4
-# #-----------------------------------------------------------------------
-# 
-# d6 <- ggplot(train_data, aes(x = x6, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d6
-# #-----------------------------------------------------------------------
-# 
-# d7 <- ggplot(train_data, aes(x = x7, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d7
-# #-----------------------------------------------------------------------
-# 
-# d10 <- ggplot(train_data, aes(x = x10, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d10
-# 
-# d11 <- ggplot(train_data, aes(x = x11, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d11
-# 
-# d12 <- ggplot(train_data, aes(x = x12, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d12
-# 
-# d14 <- ggplot(train_data, aes(x = x14, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d14
-# 
-# d15 <- ggplot(train_data, aes(x = x15, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d15
-# 
-# d16 <- ggplot(train_data, aes(x = x16, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d16
-# 
-# d17 <- ggplot(train_data, aes(x = x17, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d17
-# 
-# d18 <- ggplot(train_data, aes(x = x18, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d18
-# 
-# d19 <- ggplot(train_data, aes(x = x19, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d19
-# 
-# d20 <- ggplot(train_data, aes(x = x20, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d20
-# 
-# d21 <- ggplot(train_data, aes(x = x21, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d21
-# 
-# d22 <- ggplot(train_data, aes(x = x22, y = y)) + 
-#   geom_point() + 
-#   stat_smooth(method="lm", se=F) + theme_minimal()
-# d22
 
+
+# ================= select feature through visualization =================
+
+trn_data <- c()
+trn_data$x4 <- train_data$x4
+trn_data$x6 <- train_data$x6
+trn_data$x7 <- train_data$x7
+trn_data$x10 <- train_data$x10
+trn_data$x11 <- train_data$x11
+trn_data$x17 <- train_data$x17
+trn_data$x18 <- train_data$x18
+trn_data$x19 <- train_data$x19
+trn_data$x20 <- train_data$x20
+trn_data$x21 <- train_data$x21
+trn_data$x22 <- train_data$x22
+trn_data$x23 <- train_data$x23
+trn_data$x24 <- train_data$x24
+trn_data$x25 <- train_data$x25
+trn_data$x26 <- train_data$x26
+
+trn_data$y <- train_data$y
+trn_data <- as.data.frame(trn_data)
+corrplot(cor(trn_data),
+         method = "square",
+         type = "lower" # show only lower side
+)
 
 # ========================= transfer to formula ==========================
+
 interest <- as.formula(y ~ x4 + x6 + x7 + x10 + x11)
+
+
+# ================ analysis data through visualization and
+#                                        remove outliers =================
+
+ggscatter(train_data, x = "x4", y = "y", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "x4", ylab = "salary")
+
+train_data <- subset(train_data, 
+                     !(train_data$x4 < 3e+06 & train_data$y > 1500000))
+
+train_data <- subset(train_data,
+                     !(train_data$x4 > 4e+06 & train_data$y < 1000000))
+#-----------------------------------------------------------------------
+
+ggscatter(train_data, x = "x6", y = "y", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "x6", ylab = "salary")
+
+train_data <- subset(train_data,
+                     !(train_data$x6 > 60 & train_data$y < 200000))
+
+train_data <- subset(train_data,
+                     !(train_data$x6 < 30 & train_data$y > 750000))
+#-----------------------------------------------------------------------
+
+ggscatter(train_data, x = "x7", y = "y", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "x7", ylab = "salary")
+
+
+train_data <- subset(train_data,
+                     !(train_data$x7 < 10 & train_data$y > 6e+05))
+
+
+train_data <- subset(train_data,
+                     !(train_data$x7 > 30 & train_data$y < 1.8e+05))
+
+
+#-----------------------------------------------------------------------
+ggscatter(train_data, x = "x10", y = "y", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "x10", ylab = "salary")
+
+train_data <- subset(train_data,
+                     !(train_data$x10 > 1e+06 & train_data$y < 3e+05))
+
+#-----------------------------------------------------------------------
+
+ggscatter(train_data, x = "x11", y = "y", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "x11", ylab = "salary")
+
+train_data <- subset(train_data,
+                     !(train_data$x11 > 500000 & train_data$y < 500000))
 
 # =========================== add ID into data ===========================
 ID <- c(1:nrow(train_data))
@@ -216,7 +198,8 @@ for(i in 1 : k){
   set.seed(4312)
   
   # ========================== construct model ===========================
-  model <- randomForest(formula = interest, data = train_data, ntree = 50)
+  model <- randomForest(formula = interest, data = train_data, ntree = 50,
+                        importance = T)
   
   # =============== predict using model applied to train_d ===============
   pred_train <- predict(model, newdata = train_d, 
@@ -236,12 +219,12 @@ for(i in 1 : k){
                        data.frame(Level = 6.5), type = "response")
   
   result_test <- data.frame(ID = test_d$ID, 
-                             Base_salary = test_d$y,
-                             predictions = pred_test)
+                            Base_salary = test_d$y,
+                            predictions = pred_test)
   
   rmse_test <- rmse(result_test$Base_salary,
                     result_test$predictions) #testRMSE
-
+  
   rmse_test <- round(rmse_test, 2)
   
   # =============== predict using model applied to valid_d ==============
@@ -298,5 +281,5 @@ write.table(result_final, file = predict_output, row.names = F, quote = F, sep =
 print(paste('Fianl Test RMSE: ',round(rmse(result_final$Base_salary,
                                            result_final$predictions)
                                       , 2) 
-            )
-      ) #testRMSE
+)
+) #testRMSE

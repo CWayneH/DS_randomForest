@@ -5,16 +5,16 @@
 | Attribute | Property | Can be NULL |
 |-----------|----------|-------------|
 | X3 | char | 0 |
-| X4 | need to deal, integer | 0 |
-| X6 | need to deal, double | 0 |
-| X7 | need to deal, double | 0 |
+| X4 | integer | 0 |
+| X6 | double | 0 |
+| X7 | double | 0 |
 | Y | interest data | X |
-| X10 | need to deal, double | 0 |
-| X11 | need to deal, double | 0 |
+| X10 | double | 0 |
+| X11 | double | 0 |
 | X12 | T, char (ignore) | 1 |
-| X14 | need to deal, double (ignore city) | 0 |
-| X15 | need to deal, double (dmaid???) | 1 |
-| X16 | need to deal, integer (row number) | 0 |
+| X14 | double (ignore city) | 0 |
+| X15 | double (dmaid???) | 1 |
+| X16 | integer (row number) | 0 |
 | X17 | boolean(integer) | 0 |
 | X18 | boolean(integer) | 0 |
 | X19 | boolean(integer) | 0 |
@@ -46,7 +46,7 @@ Rscript randomForest.R --fold N --train ds_final/train_salary.csv --test ds_fina
 ### Predict
 ![Predict](3.png)
 
-## Interesting Analysis and Visualization Can be used as Reference
+## Visualization Reference
 [Salary Data EDA](https://www.kaggle.com/jackogozaly/salary-data-eda)
 
 ## Reference
